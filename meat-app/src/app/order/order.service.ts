@@ -3,6 +3,7 @@ import {ShoppingCartService} from '../restaurant-detail/shopping-cart/shopping-c
 import {CartItem} from '../restaurant-detail/shopping-cart/cart-item.model';
 import {Order, OrderItem} from './order.model';
 import {Http, Headers, RequestOptions} from '@angular/http';
+import { NotificationService } from  '../shared/messages/notification.service';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {MEAT_API} from '../app.api';
@@ -11,7 +12,7 @@ import {MEAT_API} from '../app.api';
 
 export class OrderService{
 
-  constructor(private cartService: ShoppingCartService, private http: Http){}
+  constructor(private cartService: ShoppingCartService, private http: Http, private notificationService: NotificationService ){}
 
   cartItems():CartItem[]{
     return this.cartService.items
@@ -19,10 +20,12 @@ export class OrderService{
 
   increaseQty(item: CartItem){
     this.cartService.increaseQty(item)
+    this.notificationService.notify(`Você acrescentou um item ${item.menuItem.name} a lista`)
   }
 
   decreaseQty(item: CartItem){
     this.cartService.decreaseQty(item)
+    this.notificationService.notify(`Você diminuiu um item ${item.menuItem.name} da lista`)
   }
 
   remove(item: CartItem){
