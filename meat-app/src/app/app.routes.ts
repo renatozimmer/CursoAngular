@@ -1,10 +1,11 @@
-import {Routes} from '@angular/router';
-import {HomeComponent} from './home/home.component';
-import {RestaurantsComponent} from './restaurants/restaurants.component';
-import {RestaurantDetailComponent} from './restaurant-detail/restaurant-detail.component';
-import {MenuComponent} from './restaurant-detail/menu/menu.component';
-import {ReviewsComponent} from './restaurant-detail/reviews/reviews.component';
-import {OrderSummaryComponent} from './order-summary/order-summary.component';
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { RestaurantsComponent } from './restaurants/restaurants.component';
+import { RestaurantDetailComponent } from './restaurant-detail/restaurant-detail.component';
+import { MenuComponent } from './restaurant-detail/menu/menu.component';
+import { ReviewsComponent } from './restaurant-detail/reviews/reviews.component';
+import { OrderSummaryComponent } from './order-summary/order-summary.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 export const ROUTES: Routes = [
@@ -20,5 +21,6 @@ export const ROUTES: Routes = [
   },
   {path: 'order', loadChildren: './order/order.module#OrderModule'},
   {path: 'order-summary', component: OrderSummaryComponent},
-  {path: 'about', loadChildren: './about/about.module#AboutModule'}
+  {path: 'about', loadChildren: './about/about.module#AboutModule'},
+  {path: '**', component: NotFoundComponent}
 ]
