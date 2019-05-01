@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, Validators, AbstractControl} from '@angular/forms';
+import {FormGroup, FormControl, FormBuilder, Validators, AbstractControl} from '@angular/forms';
 import {RadioOption} from '../shared/radio/radio-option.model';
 import {OrderService} from './order.service';
 import {Order, OrderItem} from './order.model';
@@ -20,6 +20,7 @@ export class OrderComponent implements OnInit {
   orderForm: FormGroup
 
   delivery: number = 8
+  orderId : String;
 
   paymentOptions: RadioOption[] = [
     {label: 'Dinheiro', value: 'MON'},
@@ -32,15 +33,19 @@ export class OrderComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.orderForm = this.formBuilder.group({
-      name: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
+    this.orderForm = new FormGroup({
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(5)]
+      }),
       email: this.formBuilder.control('', [Validators.required, Validators.pattern(this.emailPattern)]),
       emailConfirmation: this.formBuilder.control('', [Validators.required, Validators.pattern(this.emailPattern)]),
       address: this.formBuilder.control('', [Validators.required, Validators.minLength(5)]),
       number: this.formBuilder.control('', [Validators.required, Validators.pattern(this.numberPattern)]),
       optionAddress: this.formBuilder.control('', [Validators.minLength(5)]),
       paymentOption: this.formBuilder.control('', [Validators.required])
-    }, {validator: OrderComponent.equalsTo})
+    }, { validators: [OrderComponent.equalsTo], 
+         updateOn: 'blur'
+      })
   }
 
   static equalsTo(group: AbstractControl): {[keys: string]: boolean} {
@@ -78,12 +83,18 @@ export class OrderComponent implements OnInit {
   checkOrder(order: Order){
     order.orderItems = this.cartItems()
       .map((item:CartItem)=>new OrderItem(item.quantity, item.menuItem.id))
-    this.orderService
-    .checkOrder(order).subscribe( (orderId: string )=> {
+    this.orderService.checkOrder(order)
+    .do((orderId: String) => {
+      this.orderId = orderId
+    })
+    .subscribe( (orderId: string )=> {
       this.router.navigate(['/order-summary'])
       this.orderService.clear()
     })
     console.log(order)
+  }
+  isOrderCompleted():boolean{
+    return this.orderId !== undefined
   }
 
 
