@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl, FormBuilder, Validators, AbstractControl} from '@angular/forms';
-import {RadioOption} from '../shared/radio/radio-option.model';
-import {OrderService} from './order.service';
-import {Order, OrderItem} from './order.model';
-import {Router} from '@angular/router';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl} from '@angular/forms';
+import { RadioOption} from '../shared/radio/radio-option.model';
+import { OrderService} from './order.service';
+import { Order, OrderItem} from './order.model';
+import { Router} from '@angular/router';
+import { tap } from  'rxjs/operators';
 
 import {CartItem} from '../restaurant-detail/shopping-cart/cart-item.model'
 
@@ -43,7 +44,7 @@ export class OrderComponent implements OnInit {
       number: this.formBuilder.control('', [Validators.required, Validators.pattern(this.numberPattern)]),
       optionAddress: this.formBuilder.control('', [Validators.minLength(5)]),
       paymentOption: this.formBuilder.control('', [Validators.required])
-    }, { validators: [OrderComponent.equalsTo], 
+    }, { validators: [OrderComponent.equalsTo],
          updateOn: 'blur'
       })
   }
@@ -84,9 +85,9 @@ export class OrderComponent implements OnInit {
     order.orderItems = this.cartItems()
       .map((item:CartItem)=>new OrderItem(item.quantity, item.menuItem.id))
     this.orderService.checkOrder(order)
-    .do((orderId: String) => {
+    .pipe(tap((orderId: String) => {
       this.orderId = orderId
-    })
+    }))
     .subscribe( (orderId: string )=> {
       this.router.navigate(['/order-summary'])
       this.orderService.clear()
