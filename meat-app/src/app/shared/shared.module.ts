@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import {InputComponent}  from './input/input.component';
-import {RadioComponent}  from './radio/radio.component';
-import {RatingComponent} from './rating/rating.component';
+import { InputComponent }  from './input/input.component';
+import { RadioComponent }  from './radio/radio.component';
+import { RatingComponent } from './rating/rating.component';
 
 import { OrderService } from '../order/order.service';
 import { ShoppingCartService } from '../restaurant-detail/shopping-cart/shopping-cart.service';
